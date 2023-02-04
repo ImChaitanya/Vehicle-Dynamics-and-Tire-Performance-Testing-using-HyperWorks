@@ -1,0 +1,109 @@
+$-----------------------------------------------------------------ALTAIR_HEADER             
+[ALTAIR_HEADER]                                                                             
+FILE_TYPE    = 'ADF'                                                                  
+FILE_VERSION = 2.0                                                                
+FILE_FORMAT  = 'ASCII'                                                            
+$--------------------------------------------------------------------------UNITS            
+[UNITS]                                                                                     
+(BASE)                                                                                      
+{ length  force         angle           mass     time }                                               
+  'mm'   'newton'      'radians'        'kg'    'sec'                                              
+$--------------------------------------------------------------VEHICLE_IC                    
+[VEHICLE_INITIAL_CONDITIONS]                                                                 
+$These are wrt vehicle orientation marker                                                    
+VX0               = 5000                                                                                     
+VY0               = 0.0                                                                                    
+VZ0               = 0.0                                                                                    
+ENGINE_INIT_SPEED = 300                                                                                    
+$--------------------------------------------------------------STEERING_STANDARD            
+[STEER_STANDARD]                                                                            
+MAX_VALUE            = 9.4248                                      
+MIN_VALUE            = -9.4248                                      
+SMOOTHING_FREQUENCY  = 10                            
+INITIAL_VALUE 	      = 0                                  
+$--------------------------------------------------------------THROTTLE_STANDARD            
+[THROTTLE_STANDARD]                                                                         
+MAX_VALUE            = 1                                     
+MIN_VALUE            = 0                                     
+SMOOTHING_FREQUENCY  = 10                           
+INITIAL_VALUE        = 0                                 
+$---------------------------------------------------------------BRAKING_STANDARD            
+[BRAKE_STANDARD]                                                                            
+MAX_VALUE            = 1                                     
+MIN_VALUE            = 0                                     
+SMOOTHING_FREQUENCY  = 10                           
+INITIAL_VALUE        = 0                                 
+$---------------------------------------------------------------GEAR_STANDARD            
+[GEAR_STANDARD]                                                                         
+MAX_VALUE            = 6                                      
+MIN_VALUE            = 1                                      
+SMOOTHING_FREQUENCY  = 10                            
+INITIAL_VALUE        = 1                                  
+$---------------------------------------------------------------CLUTCH_STANDARD            
+[CLUTCH_STANDARD]                                                                            
+MAX_VALUE            = 1                                     
+MIN_VALUE            = 0                                     
+SMOOTHING_FREQUENCY  = 10                           
+INITIAL_VALUE        = 0                                 
+$-----------------------------------------------------------------MANEUVERS_LIST            
+[MANEUVERS_LIST]                                                                            
+{name            simulation_time      h_max           print_interval }
+'MANEUVER_1'     2.0                  0.01            0.05            
+'MANEUVER_2'     10.0                 0.01            0.05            
+$---------------------------------------------------------------------MANEUVER_1            
+[MANEUVER_1]                                                                                
+TASK = 'STANDARD'                                                                           
+(CONTROLLERS)                                                                               
+{DRIVER_SIGNAL             PRIMARY_CONTROLLER        ADDITIONAL_CONTROLLER    }
+ STEER                     OL_STEER_0                NONE                     
+ THROTTLE                  FF_TRACTION_CONTROLLER    NONE                     
+ BRAKE                     FF_TRACTION_CONTROLLER    NONE                     
+ GEAR                      GEAR_CLUTCH_CONTROL       NONE                     
+ CLUTCH                    GEAR_CLUTCH_CONTROL       NONE                     
+$---------------------------------------------------------OL_STEER_0             
+[OL_STEER_0]                                                                      
+TAG                    = 'OPENLOOP'
+TYPE                   = 'CONSTANT'
+VALUE                  = 0.0
+$-----------------------------------------------------------FF_TRACTION_CONTROLLER            
+[FF_TRACTION_CONTROLLER]                                                                      
+TAG                    = 'FEEDFORWARD'
+TYPE                   = 'FOLLOW_VELOCITY'
+LOOK_AHEAD_TIME        = 0.5
+DEMAND_SIGNAL          = 'DEMAND_VEL'
+$-----------------------------------------------------------DEMAND_VEL                    
+[DEMAND_VEL]                                                                              
+TYPE           = 'CONSTANT'                     
+VALUE          = 5000               
+$---------------------------------------------------------------------MANEUVER_2            
+[MANEUVER_2]                                                                                
+TASK = 'STANDARD'                                                                           
+(CONTROLLERS)                                                                               
+{DRIVER_SIGNAL             PRIMARY_CONTROLLER        ADDITIONAL_CONTROLLER    }
+ STEER                     OL_STEER_0                NONE                     
+ THROTTLE                  FF_TRACTION_CONTROLLER1   NONE                     
+ BRAKE                     FF_TRACTION_CONTROLLER1   NONE                     
+ GEAR                      GEAR_CLUTCH_CONTROL       NONE                     
+ CLUTCH                    GEAR_CLUTCH_CONTROL       NONE                     
+$-----------------------------------------------------------FF_TRACTION_CONTROLLER1            
+[FF_TRACTION_CONTROLLER1]                                                                      
+TAG                    = 'FEEDFORWARD'
+TYPE                   = 'FOLLOW_VELOCITY'
+LOOK_AHEAD_TIME        = 0.5
+DEMAND_SIGNAL          = 'DEMAND_VEL1'
+$-----------------------------------------------------------DEMAND_VEL1                    
+[DEMAND_VEL1]                                                                              
+TYPE           = 'EXPRESSION'                     
+SIGNAL_CHANNEL = 0               
+EXPRESSION     = ' 5000.0 + 1962.0 * {%TIME} '                   
+$-----------------------------------------------------------%GEAR_CLUTCH_CONTROL 
+$Used in case of models with IC Engine 
+[GEAR_CLUTCH_CONTROL] 
+TAG = 'ENGINE_SPEED'  
+(GEAR_SHIFT_MAP)      
+{G   US      DS      CT      CRT     TFD     TFT     CFT     TRD     TRT}    
+ 1   650     125     0.45    0.05    0.1     0.1     0.05    0.05    0.05   
+ 2   650     125     0.45    0.05    0.1     0.1     0.05    0.05    0.05   
+ 3   650     125     0.45    0.05    0.1     0.1     0.05    0.05    0.05   
+ 4   650     125     0.45    0.05    0.1     0.1     0.05    0.05    0.05   
+ 5   650     125     0.45    0.05    0.1     0.1     0.05    0.05    0.05   

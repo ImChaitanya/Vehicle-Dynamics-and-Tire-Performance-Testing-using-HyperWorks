@@ -1,0 +1,2181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl"
+ href="http://www.altairhyperworks.com/motionsolve-xml/motionsolve_v1.xsl"?>
+<MultiBodySystem
+ xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+ xs:noNamespaceSchemaLocation="http://www.altairhyperworks.com/motionsolve-xml/motionsolve_v1.xsd"
+     hw_version          = "2022.0"
+     build_number        = ".0.33">
+ <Messaging
+     log_option          = "Overwrite"
+ />
+<!--
+Model Hierarchy
+    Model
+        Misc
+        AutoTire
+            AutoTire
+                Tire States
+                Tire Graphics
+        Longitudinal Slip Test
+-->
+ <Model>
+  <Param_Simulation
+     constr_tol          = "1.0000E-10"
+     implicit_diff_tol   = "1.0000E-06"
+     nr_converg_ratio    = "0.09"
+     collision_engine    = "PCM"
+     linsolver           = "HARWELL"
+  />
+  <Param_Transient
+     integrator_type     = "DSTIFF"
+     integr_tol          = "0.001"
+     h_max               = "0.01"
+     h0_max              = "1.0000E-08"
+     h_min               = "1.0000E-06"
+     max_order           = "5"
+     vel_tol_factor      = "1000."
+     dae_constr_tol      = "1.0000E-05"
+     dae_corrector_maxit = "4"
+     dae_corrector_minit = "0"
+     dae_index           = "3"
+     dae_vel_ctrl        = "FALSE"
+  />
+  <Param_Static
+     method              = "FIM_D"
+     max_error           = "0.0001"
+     max_imbalance       = "0.0001"
+     stability           = "1.0000E-10"
+     max_ke_tol          = "1.0000E-05"
+     max_dq_tol          = "0.001"
+     max_num_iter        = "75"
+  />
+  <Param_Linear
+     anim_scale          = "1."
+     write_simulinkmdl   = "FALSE"
+     write_matlabfiles   = "FALSE"
+     write_oml           = "FALSE"
+     write_eig_info      = "TRUE"
+  />
+  <H3DOutput
+     switch_on           = "TRUE"
+  />
+  <ResOutput
+     abf_file            = "TRUE"
+     plt_file            = "TRUE"
+     angle_type          = "YPR"
+     capture_max_pd      = "TRUE"
+     contact_gra_output  = "TRUE"
+     abf_unique_time     = "LAST"
+     azero               = "1.0000E-10"
+     dzero               = "1.0000E-10"
+     fzero               = "1.0000E-10"
+     vzero               = "1.0000E-10"
+  />
+  <Param_Unit
+     force_unit          = "NEWTON"
+     mass_unit           = "KILOGRAM"
+     length_unit         = "MILLIMETER"
+     time_unit           = "SECOND"
+  />
+<!-- MODEL.Global_Frame -->
+  <Reference_Marker
+     id                  = "30101010"
+     label               = "Global Frame"
+     full_label          = "Model-Global Frame"
+     body_id             = "30101"
+     body_type           = "RigidBody"
+  />
+<!-- MODEL.sys_comp_testrig.b_wheel_hub.lprf -->
+  <Reference_Marker
+     id                  = "30301001"
+     label               = "Wheel_hub-Marker LPRF"
+     full_label          = "Model-AutoTire-Wheel_hub-Marker LPRF"
+     body_id             = "30301"
+     body_type           = "RigidBody"
+  />
+<!-- MODEL.sys_comp_testrig.m_road_ref_marker -->
+  <Reference_Marker
+     id                  = "30301010"
+     label               = "Road_ref_marker"
+     full_label          = "Model-AutoTire-Road_ref_marker"
+     body_id             = "30101"
+     body_type           = "RigidBody"
+  />
+<!-- MODEL.sys_comp_testrig.j_rig_long_camber_jt.joint_j -->
+  <Reference_Marker
+     id                  = "30301020"
+     label               = "Rig_Long_Camber_Jt-Marker J"
+     full_label          = "Model-AutoTire-Rig_Long_Camber_Jt-Marker J"
+     body_id             = "30101"
+     body_type           = "RigidBody"
+     pos_x               = "600."
+     pos_y               = "0."
+     pos_z               = "0."
+     a00                 = "0."
+     a10                 = "-1."
+     a20                 = "0."
+     a02                 = "-1."
+     a12                 = "0."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.b_wheel_hub.cm -->
+  <Reference_Marker
+     id                  = "30301100"
+     label               = "Wheel_hub-Marker CM"
+     full_label          = "Model-AutoTire-Wheel_hub-Marker CM"
+     body_id             = "30301"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+  />
+<!-- MODEL.sys_comp_testrig.m_tire_marker -->
+  <Reference_Marker
+     id                  = "30301101"
+     label               = "Tire Marker"
+     full_label          = "Model-AutoTire-Tire Marker"
+     body_id             = "30301"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "0."
+     a22                 = "1."
+  />
+<!-- MODEL.sys_comp_testrig.j_w_spin_rj.joint_i -->
+  <Reference_Marker
+     id                  = "30301102"
+     label               = "Wheel spindle rj-Marker I"
+     full_label          = "Model-AutoTire-Wheel spindle rj-Marker I"
+     body_id             = "30301"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.b_wheel_hub.geomprops.cm -->
+  <Reference_Marker
+     id                  = "30301110"
+     label               = "Wheel_hub-Inertia Props-Marker CM"
+     full_label          = "Model-AutoTire-Wheel_hub-Inertia Props-Marker CM"
+     body_id             = "30301"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+  />
+<!-- MODEL.sys_comp_testrig.b_rig_body.lprf -->
+  <Reference_Marker
+     id                  = "30302001"
+     label               = "Rig_body-Marker LPRF"
+     full_label          = "Model-AutoTire-Rig_body-Marker LPRF"
+     body_id             = "30302"
+     body_type           = "RigidBody"
+  />
+<!-- MODEL.sys_comp_testrig.b_rig_body.cm -->
+  <Reference_Marker
+     id                  = "30302020"
+     label               = "Rig_body-Marker CM"
+     full_label          = "Model-AutoTire-Rig_body-Marker CM"
+     body_id             = "30302"
+     body_type           = "RigidBody"
+     pos_x               = "600."
+     pos_y               = "0."
+     pos_z               = "0."
+  />
+<!-- MODEL.sys_comp_testrig.j_rig_long_camber_jt.joint_i -->
+  <Reference_Marker
+     id                  = "30302021"
+     label               = "Rig_Long_Camber_Jt-Marker I"
+     full_label          = "Model-AutoTire-Rig_Long_Camber_Jt-Marker I"
+     body_id             = "30302"
+     body_type           = "RigidBody"
+     pos_x               = "600."
+     pos_y               = "0."
+     pos_z               = "0."
+     a00                 = "0."
+     a10                 = "-1."
+     a20                 = "0."
+     a02                 = "-1."
+     a12                 = "0."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.j_rig_vert_toe_jt.joint_j -->
+  <Reference_Marker
+     id                  = "30302040"
+     label               = "Rig_Vert_Toe_Jt-Marker J"
+     full_label          = "Model-AutoTire-Rig_Vert_Toe_Jt-Marker J"
+     body_id             = "30302"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "850."
+     a00                 = "1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "0."
+     a22                 = "-1."
+  />
+<!-- MODEL.sys_comp_testrig.frc_rig_vert_force.j -->
+  <Reference_Marker
+     id                  = "30302041"
+     label               = "Rig_Vert_Force-Marker J"
+     full_label          = "Model-AutoTire-Rig_Vert_Force-Marker J"
+     body_id             = "30302"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "850."
+  />
+<!-- MODEL.sys_comp_testrig.b_rig_body.geomprops.cm -->
+  <Reference_Marker
+     id                  = "30302120"
+     label               = "Rig_body-Inertia Props-Marker CM"
+     full_label          = "Model-AutoTire-Rig_body-Inertia Props-Marker CM"
+     body_id             = "30302"
+     body_type           = "RigidBody"
+     pos_x               = "305.64055"
+     pos_y               = "0."
+     pos_z               = "553.43346"
+  />
+<!-- MODEL.sys_comp_testrig.b_carrier.lprf -->
+  <Reference_Marker
+     id                  = "30303001"
+     label               = "Carrier-Marker LPRF"
+     full_label          = "Model-AutoTire-Carrier-Marker LPRF"
+     body_id             = "30303"
+     body_type           = "RigidBody"
+  />
+<!-- MODEL.sys_comp_testrig.j_rig_vert_toe_jt.joint_i -->
+  <Reference_Marker
+     id                  = "30303040"
+     label               = "Rig_Vert_Toe_Jt-Marker I"
+     full_label          = "Model-AutoTire-Rig_Vert_Toe_Jt-Marker I"
+     body_id             = "30303"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "850."
+     a00                 = "1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "0."
+     a22                 = "-1."
+  />
+<!-- MODEL.sys_comp_testrig.b_carrier.cm -->
+  <Reference_Marker
+     id                  = "30303100"
+     label               = "Carrier-Marker CM"
+     full_label          = "Model-AutoTire-Carrier-Marker CM"
+     body_id             = "30303"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+  />
+<!-- MODEL.sys_comp_testrig.j_w_spin_rj.joint_j -->
+  <Reference_Marker
+     id                  = "30303101"
+     label               = "Wheel spindle rj-Marker J"
+     full_label          = "Model-AutoTire-Wheel spindle rj-Marker J"
+     body_id             = "30303"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.frc_rig_vert_force.i -->
+  <Reference_Marker
+     id                  = "30303102"
+     label               = "Rig_Vert_Force-Marker I"
+     full_label          = "Model-AutoTire-Rig_Vert_Force-Marker I"
+     body_id             = "30303"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+  />
+<!-- MODEL.sys_comp_testrig.b_carrier.geomprops.cm -->
+  <Reference_Marker
+     id                  = "30303130"
+     label               = "Carrier-Inertia Props-Marker CM"
+     full_label          = "Model-AutoTire-Carrier-Inertia Props-Marker CM"
+     body_id             = "30303"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "578.93983"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.b_wheel_part.cm -->
+  <Reference_Marker
+     id                  = "30401010"
+     label               = "wheel_part-Marker CM"
+     full_label          = "Model-AutoTire-AutoTire-wheel_part-Marker CM"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "0."
+     a10                 = "0."
+     a20                 = "1."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.b_wheel_part.im -->
+  <Reference_Marker
+     id                  = "30401011"
+     label               = "wheel_part-Marker IM"
+     full_label          = "Model-AutoTire-AutoTire-wheel_part-Marker IM"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "0."
+     a10                 = "0."
+     a20                 = "1."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.b_wheel_part.lprf -->
+  <Reference_Marker
+     id                  = "30401012"
+     label               = "wheel_part-Marker LPRF"
+     full_label          = "Model-AutoTire-AutoTire-wheel_part-Marker LPRF"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.m_rim_x_axis -->
+  <Reference_Marker
+     id                  = "30401020"
+     label               = "m_rim_x_axis"
+     full_label          = "Model-AutoTire-AutoTire-m_rim_x_axis"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "-0.1"
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "0."
+     a22                 = "1."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.m_rim_y_axis -->
+  <Reference_Marker
+     id                  = "30401030"
+     label               = "m_rim_y_axis"
+     full_label          = "Model-AutoTire-AutoTire-m_rim_y_axis"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "-0.1"
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "0."
+     a22                 = "1."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.m_rim_z_axis -->
+  <Reference_Marker
+     id                  = "30401040"
+     label               = "m_rim_z_axis"
+     full_label          = "Model-AutoTire-AutoTire-m_rim_z_axis"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313.1"
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "0."
+     a22                 = "1."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.m_wheelcm -->
+  <Reference_Marker
+     id                  = "30401100"
+     label               = "CM Marker for wheel body"
+     full_label          = "Model-AutoTire-AutoTire-CM Marker for wheel body"
+     body_id             = "30301"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "0."
+     a22                 = "1."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.m_I_marker -->
+  <Reference_Marker
+     id                  = "30401101"
+     label               = "Tire I Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire I Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "0."
+     a22                 = "1."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.m_J_marker -->
+  <Reference_Marker
+     id                  = "30401102"
+     label               = "Tire J Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire J Marker"
+     body_id             = "30101"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.j_fixed.joint_i -->
+  <Reference_Marker
+     id                  = "30401103"
+     label               = "wheel attachment-Marker I"
+     full_label          = "Model-AutoTire-AutoTire-wheel attachment-Marker I"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.j_fixed.joint_j -->
+  <Reference_Marker
+     id                  = "30401104"
+     label               = "wheel attachment-Marker J"
+     full_label          = "Model-AutoTire-AutoTire-wheel attachment-Marker J"
+     body_id             = "30301"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gf_tire_force.jfloat -->
+  <Reference_Marker
+     id                  = "30401105"
+     label               = "Tire force-Float Marker J"
+     full_label          = "Model-AutoTire-AutoTire-Tire force-Float Marker J"
+     body_id             = "30101"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.m_spoke_center -->
+  <Reference_Marker
+     id                  = "30601010"
+     label               = "spoke_center"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-spoke_center"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.m_spkgra_align -->
+  <Reference_Marker
+     id                  = "30601011"
+     label               = "spoke graphic align marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-spoke graphic align marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.vert_ld.i -->
+  <Reference_Marker
+     id                  = "70000001"
+     label               = "Vertical load-Marker I"
+     full_label          = "Model-AutoTire-Vertical load-Marker I"
+     body_id             = "30101"
+     body_type           = "RigidBody"
+  />
+<!-- MODEL.sys_comp_testrig.vert_ld.j -->
+  <Reference_Marker
+     id                  = "70000002"
+     label               = "Vertical load-Marker J"
+     full_label          = "Model-AutoTire-Vertical load-Marker J"
+     body_id             = "30101"
+     body_type           = "RigidBody"
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_rig_bearing_inner_center_marker -->
+  <Reference_Marker
+     id                  = "90000000"
+     label               = "Rig_bearing_inner - Center Marker"
+     full_label          = "Model-AutoTire-Rig_bearing_inner - Center Marker"
+     body_id             = "30101"
+     body_type           = "RigidBody"
+     pos_x               = "550."
+     pos_y               = "0."
+     pos_z               = "0."
+     a00                 = "0."
+     a10                 = "0."
+     a20                 = "-1."
+     a02                 = "1."
+     a12                 = "0."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_hub_carrier_center_marker -->
+  <Reference_Marker
+     id                  = "90000001"
+     label               = "Hub/Carrier - Center Marker"
+     full_label          = "Model-AutoTire-Hub/Carrier - Center Marker"
+     body_id             = "30301"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "-150."
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_rig_bearing_outer_center_marker -->
+  <Reference_Marker
+     id                  = "90000002"
+     label               = "Rig_bearing_outer - Center Marker"
+     full_label          = "Model-AutoTire-Rig_bearing_outer - Center Marker"
+     body_id             = "30302"
+     body_type           = "RigidBody"
+     pos_x               = "560."
+     pos_y               = "0."
+     pos_z               = "0."
+     a00                 = "0."
+     a10                 = "0."
+     a20                 = "-1."
+     a02                 = "1."
+     a12                 = "0."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.gbox_rig_column_center_marker -->
+  <Reference_Marker
+     id                  = "90000003"
+     label               = "Rig_column - Center Marker"
+     full_label          = "Model-AutoTire-Rig_column - Center Marker"
+     body_id             = "30302"
+     body_type           = "RigidBody"
+     pos_x               = "600."
+     pos_y               = "0."
+     pos_z               = "425."
+  />
+<!-- MODEL.sys_comp_testrig.gbox_rig_beam_center_marker -->
+  <Reference_Marker
+     id                  = "90000004"
+     label               = "Rig_beam - Center Marker"
+     full_label          = "Model-AutoTire-Rig_beam - Center Marker"
+     body_id             = "30302"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "850."
+     a00                 = "0."
+     a10                 = "0."
+     a20                 = "1."
+     a02                 = "1."
+     a12                 = "0."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_rig_corner_1_center_marker -->
+  <Reference_Marker
+     id                  = "90000005"
+     label               = "Rig_corner_1 - Center Marker"
+     full_label          = "Model-AutoTire-Rig_corner_1 - Center Marker"
+     body_id             = "30302"
+     body_type           = "RigidBody"
+     pos_x               = "600."
+     pos_y               = "-25."
+     pos_z               = "850."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_toe_bearing_outer_center_marker -->
+  <Reference_Marker
+     id                  = "90000006"
+     label               = "Toe_bearing_outer - Center Marker"
+     full_label          = "Model-AutoTire-Toe_bearing_outer - Center Marker"
+     body_id             = "30302"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "775."
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_toe_bearing_inner_center_marker -->
+  <Reference_Marker
+     id                  = "90000007"
+     label               = "Toe_bearing_inner - Center Marker"
+     full_label          = "Model-AutoTire-Toe_bearing_inner - Center Marker"
+     body_id             = "30303"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "850."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "0."
+     a22                 = "-1."
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_act_top_center_marker -->
+  <Reference_Marker
+     id                  = "90000008"
+     label               = "Actuator-top - Center Marker"
+     full_label          = "Model-AutoTire-Actuator-top - Center Marker"
+     body_id             = "30303"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "-150."
+     pos_z               = "700."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_act_l_center_marker -->
+  <Reference_Marker
+     id                  = "90000009"
+     label               = "Actuator-left - Center Marker"
+     full_label          = "Model-AutoTire-Actuator-left - Center Marker"
+     body_id             = "30303"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "-150."
+     pos_z               = "700."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "0."
+     a22                 = "-1."
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_act_r_center_marker -->
+  <Reference_Marker
+     id                  = "90000010"
+     label               = "Actuator-right - Center Marker"
+     full_label          = "Model-AutoTire-Actuator-right - Center Marker"
+     body_id             = "30303"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "150."
+     pos_z               = "700."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "0."
+     a22                 = "-1."
+  />
+<!-- MODEL.sys_comp_testrig.gsph_act_top_l_center_marker -->
+  <Reference_Marker
+     id                  = "90000011"
+     label               = "Actuator corver top-left - Center Marker"
+     full_label          = "Model-AutoTire-Actuator corver top-left - Center Marker"
+     body_id             = "30303"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "-150."
+     pos_z               = "700."
+  />
+<!-- MODEL.sys_comp_testrig.gsph_act_top_r_center_marker -->
+  <Reference_Marker
+     id                  = "90000012"
+     label               = "Actuator corver top-right - Center Marker"
+     full_label          = "Model-AutoTire-Actuator corver top-right - Center Marker"
+     body_id             = "30303"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "150."
+     pos_z               = "700."
+  />
+<!-- MODEL.sys_comp_testrig.gsph_act_bot_l_center_marker -->
+  <Reference_Marker
+     id                  = "90000013"
+     label               = "Actuator corver bot-left - Center Marker"
+     full_label          = "Model-AutoTire-Actuator corver bot-left - Center Marker"
+     body_id             = "30303"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "-150."
+     pos_z               = "313."
+  />
+<!-- MODEL.sys_comp_testrig.gsph_act_bot_r_center_marker -->
+  <Reference_Marker
+     id                  = "90000014"
+     label               = "Actuator corver bot-right - Center Marker"
+     full_label          = "Model-AutoTire-Actuator corver bot-right - Center Marker"
+     body_id             = "30303"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "150."
+     pos_z               = "313."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_hub_center_marker -->
+  <Reference_Marker
+     id                  = "90000015"
+     label               = "Wheel Hub - Center Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Hub - Center Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "5.125"
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_spoke_1_center_marker -->
+  <Reference_Marker
+     id                  = "90000016"
+     label               = "Wheel Spoke 1 - Center Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Spoke 1 - Center Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "0."
+     a10                 = "0."
+     a20                 = "1."
+     a02                 = "-1."
+     a12                 = "0."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_spoke_2_center_marker -->
+  <Reference_Marker
+     id                  = "90000017"
+     label               = "Wheel Spoke 2 - Center Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Spoke 2 - Center Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "-0.95105652"
+     a10                 = "0."
+     a20                 = "0.30901699"
+     a02                 = "-0.30901699"
+     a12                 = "0."
+     a22                 = "-0.95105652"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_spoke_3_center_marker -->
+  <Reference_Marker
+     id                  = "90000018"
+     label               = "Wheel Spoke 3 - Center Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Spoke 3 - Center Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "-0.58778525"
+     a10                 = "0."
+     a20                 = "-0.80901699"
+     a02                 = "0.80901699"
+     a12                 = "0."
+     a22                 = "-0.58778525"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_spoke_4_center_marker -->
+  <Reference_Marker
+     id                  = "90000019"
+     label               = "Wheel Spoke 4 - Center Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Spoke 4 - Center Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "0.58778525"
+     a10                 = "0."
+     a20                 = "-0.80901699"
+     a02                 = "0.80901699"
+     a12                 = "0."
+     a22                 = "0.58778525"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_spoke_5_center_marker -->
+  <Reference_Marker
+     id                  = "90000020"
+     label               = "Wheel Spoke 5 - Center Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Spoke 5 - Center Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "0."
+     pos_z               = "313."
+     a00                 = "0.95105652"
+     a10                 = "0."
+     a20                 = "0.30901699"
+     a02                 = "-0.30901699"
+     a12                 = "0."
+     a22                 = "0.95105652"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_tread_center_marker -->
+  <Reference_Marker
+     id                  = "90000021"
+     label               = "Tire tread - Center Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Tire tread - Center Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "71.75"
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_bead_inner_center_marker -->
+  <Reference_Marker
+     id                  = "90000022"
+     label               = "Tire bead inner - Center Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Tire bead inner - Center Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "71.75"
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_bead_outer_center_marker -->
+  <Reference_Marker
+     id                  = "90000023"
+     label               = "Tire bead outer - Center Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Tire bead outer - Center Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "-71.75"
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_sidewall_inner_center_marker -->
+  <Reference_Marker
+     id                  = "90000024"
+     label               = "Tire sidewall inner - Center Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Tire sidewall inner - Center Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "71.75"
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_sidewall_outer_center_marker -->
+  <Reference_Marker
+     id                  = "90000025"
+     label               = "Tire sidewall outer - Center Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Tire sidewall outer - Center Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "-71.75"
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_rim_center_marker -->
+  <Reference_Marker
+     id                  = "90000026"
+     label               = "Wheel Rim - Center Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Rim - Center Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "71.75"
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_inner_center_marker -->
+  <Reference_Marker
+     id                  = "90000027"
+     label               = "Wheel Inner - Center Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Inner - Center Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "71.75"
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_outer_center_marker -->
+  <Reference_Marker
+     id                  = "90000028"
+     label               = "Wheel Outer - Center Marker"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Outer - Center Marker"
+     body_id             = "30401"
+     body_type           = "RigidBody"
+     pos_x               = "0."
+     pos_y               = "-71.75"
+     pos_z               = "313."
+     a00                 = "-1."
+     a10                 = "0."
+     a20                 = "0."
+     a02                 = "0."
+     a12                 = "-1."
+     a22                 = "0."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_time -->
+  <Reference_Variable
+     id                  = "30500100"
+     label               = "SolverVariable u time"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-SolverVariable u time"
+     type                = "EXPRESSION"
+     expr                = "TIME"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_dx -->
+  <Reference_Variable
+     id                  = "30500200"
+     label               = "X Disp - u_rim_dx"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-X Disp - u_rim_dx"
+     type                = "EXPRESSION"
+     expr                = "dx(30401101,30301010,30301010)"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_dy -->
+  <Reference_Variable
+     id                  = "30500300"
+     label               = "Y Disp - u_rim_dy"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-Y Disp - u_rim_dy"
+     type                = "EXPRESSION"
+     expr                = "dy(30401101,30301010,30301010)"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_dz -->
+  <Reference_Variable
+     id                  = "30500400"
+     label               = "Z Disp - u_rim_dz"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-Z Disp - u_rim_dz"
+     type                = "EXPRESSION"
+     expr                = "dz(30401101,30301010,30301010)"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_x_dot_x -->
+  <Reference_Variable
+     id                  = "30500500"
+     label               = "X Disp - u_rim_x_dot_x"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-X Disp - u_rim_x_dot_x"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(907,30401101,30301010,30301010,1,1)"
+     usrsub_dll_name     = "msautoutils"
+     usrsub_fnc_name     = "VARSUB"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_x_dot_y -->
+  <Reference_Variable
+     id                  = "30500600"
+     label               = "Y Disp - u_rim_x_dot_y"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-Y Disp - u_rim_x_dot_y"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(907,30401101,30301010,30301010,1,2)"
+     usrsub_dll_name     = "msautoutils"
+     usrsub_fnc_name     = "VARSUB"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_x_dot_z -->
+  <Reference_Variable
+     id                  = "30500700"
+     label               = "Z Disp - u_rim_x_dot_z"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-Z Disp - u_rim_x_dot_z"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(907,30401101,30301010,30301010,1,3)"
+     usrsub_dll_name     = "msautoutils"
+     usrsub_fnc_name     = "VARSUB"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_y_dot_x -->
+  <Reference_Variable
+     id                  = "30500800"
+     label               = "X Disp - u_rim_y_dot_x"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-X Disp - u_rim_y_dot_x"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(907,30401101,30301010,30301010,2,1)"
+     usrsub_dll_name     = "msautoutils"
+     usrsub_fnc_name     = "VARSUB"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_y_dot_y -->
+  <Reference_Variable
+     id                  = "30500900"
+     label               = "Y Disp - u_rim_y_dot_y"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-Y Disp - u_rim_y_dot_y"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(907,30401101,30301010,30301010,2,2)"
+     usrsub_dll_name     = "msautoutils"
+     usrsub_fnc_name     = "VARSUB"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_y_dot_z -->
+  <Reference_Variable
+     id                  = "30501000"
+     label               = "Z Disp - u_rim_y_dot_z"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-Z Disp - u_rim_y_dot_z"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(907,30401101,30301010,30301010,2,3)"
+     usrsub_dll_name     = "msautoutils"
+     usrsub_fnc_name     = "VARSUB"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_vx -->
+  <Reference_Variable
+     id                  = "30501100"
+     label               = "X Vel - u_rim_vx"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-X Vel - u_rim_vx"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(906,1,30401101,30301010,30301010)"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "VARSUB"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_vy -->
+  <Reference_Variable
+     id                  = "30501200"
+     label               = "Y Vel - u_rim_vy"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-Y Vel - u_rim_vy"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(906,2,30401101,30301010,30301010)"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "VARSUB"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_vz -->
+  <Reference_Variable
+     id                  = "30501300"
+     label               = "Z Vel - u_rim_vz"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-Z Vel - u_rim_vz"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(906,3,30401101,30301010,30301010)"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "VARSUB"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_wx -->
+  <Reference_Variable
+     id                  = "30501400"
+     label               = "RX Vel - u_rim_wx"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-RX Vel - u_rim_wx"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(906,4,30401101,30301010,30301010)"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "VARSUB"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_wy -->
+  <Reference_Variable
+     id                  = "30501500"
+     label               = "RY Vel - u_rim_wy"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-RY Vel - u_rim_wy"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(906,5,30401101,30301010,30301010)"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "VARSUB"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_wz -->
+  <Reference_Variable
+     id                  = "30501600"
+     label               = "RZ Vel - u_rim_wz"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-RZ Vel - u_rim_wz"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(906,6,30401101,30301010,30301010)"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "VARSUB"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sv_u_rim_ss_lon_slip -->
+  <Reference_Variable
+     id                  = "30501700"
+     label               = "slip - u_rim_ss_lon_slip"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-slip - u_rim_ss_lon_slip"
+     type                = "EXPRESSION"
+     expr                = "0.0"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.st_tpf -->
+  <Reference_String
+     id                  = "304001"
+     label               = "tire property file string"
+     full_label          = "Model-AutoTire-AutoTire-tire property file string"
+     string              = "C:/Program Files/Altair/2022/hwdesktop/hw/mdl/autoentities/properties/Tires/MF_SWIFT/TNO_car205_60R15.tir"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.st_rpf -->
+  <Reference_String
+     id                  = "304002"
+     label               = "road property file string"
+     full_label          = "Model-AutoTire-AutoTire-road property file string"
+     string              = "C:/Program Files/Altair/2022/hwdesktop/hw/mdl/autoentities/properties/Tires/MF_SWIFT/TNO_FlatRoad.rdf"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.st_role -->
+  <Reference_String
+     id                  = "304003"
+     label               = "minor role string"
+     full_label          = "Model-AutoTire-AutoTire-minor role string"
+     string              = "front"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.st_simulation -->
+  <Reference_String
+     id                  = "304004"
+     label               = "simulation type string"
+     full_label          = "Model-AutoTire-AutoTire-simulation type string"
+     string              = "VEHICLE_HANDLING_DYNAMIC"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.st_axle -->
+  <Reference_String
+     id                  = "304005"
+     label               = "Axle Number"
+     full_label          = "Model-AutoTire-AutoTire-Axle Number"
+     string              = "1"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sa_u_array_fixed -->
+  <Reference_Array
+     id                  = "30500100"
+     label               = "SolverArray U - Fixed Road"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-SolverArray U - Fixed Road"
+     type                = "U"
+     num_element         = "17">
+30500100 30500200 30500300 30500400 30500500 30500600 30500700 30500800 30500900 30501000 30501100 30501200 
+30501300 30501400 30501500 30501600 30501700 
+  </Reference_Array>
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sa_x_array -->
+  <Reference_Array
+     id                  = "30500200"
+     label               = "SolverArray X"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-SolverArray X"
+     type                = "X"
+     num_element         = "1"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.sys_tire_states.sa_y_array -->
+  <Reference_Array
+     id                  = "30500300"
+     label               = "SolverArray Y"
+     full_label          = "Model-AutoTire-AutoTire-Tire States-SolverArray Y"
+     type                = "Y"
+     num_element         = "1"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.ar_tire_input_array -->
+  <Reference_Array
+     id                  = "30400100"
+     label               = "tire input array"
+     full_label          = "Model-AutoTire-AutoTire-tire input array"
+     type                = "IC"
+     num_element         = "18">
+ 30500200 18 0 304003 304001
+ 304004 304002 304005 326 0
+ 1 30400200 30400300 0 0
+ 0 304005 0
+  </Reference_Array>
+<!-- MODEL.sys_comp_testrig.ts_Tire.ar_scaling_drift -->
+  <Reference_Array
+     id                  = "30400200"
+     label               = "Scaling and drift factors"
+     full_label          = "Model-AutoTire-AutoTire-Scaling and drift factors"
+     type                = "IC"
+     num_element         = "8">
+ 0 1 1 1 0
+ 0 0 0
+  </Reference_Array>
+<!-- MODEL.sys_comp_testrig.ts_Tire.ar_user_param -->
+  <Reference_Array
+     id                  = "30400300"
+     label               = "User parameters"
+     full_label          = "Model-AutoTire-AutoTire-User parameters"
+     type                = "IC"
+     num_element         = "1">
+ 0
+  </Reference_Array>
+<!-- MODEL.B_Ground -->
+  <Body_Rigid
+     id                  = "30101"
+     label               = "Ground Body"
+     full_label          = "Model-Ground Body"
+     IsGround            = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.b_wheel_hub -->
+  <Body_Rigid
+     id                  = "30301"
+     label               = "Wheel_hub"
+     full_label          = "Model-AutoTire-Wheel_hub"
+     cg_id               = "30301110"
+     im_id               = "30301110"
+     lprf_id             = "30301001"
+     mass                = "4.6299222"
+     inertia_xx          = "35447.842"
+     inertia_yy          = "1446.8507"
+     inertia_zz          = "35447.842"
+  />
+<!-- MODEL.sys_comp_testrig.b_rig_body -->
+  <Body_Rigid
+     id                  = "30302"
+     label               = "Rig_body"
+     full_label          = "Model-AutoTire-Rig_body"
+     cg_id               = "30302120"
+     im_id               = "30302120"
+     lprf_id             = "30302001"
+     mass                = "56.116834"
+     inertia_xx          = "7167412.1"
+     inertia_yy          = "15031089."
+     inertia_zz          = "7915195.8"
+     inertia_xy          = "0."
+     inertia_yz          = "3.5508E-13"
+     inertia_xz          = "-4839577.4"
+  />
+<!-- MODEL.sys_comp_testrig.b_carrier -->
+  <Body_Rigid
+     id                  = "30303"
+     label               = "Carrier"
+     full_label          = "Model-AutoTire-Carrier"
+     cg_id               = "30303130"
+     im_id               = "30303130"
+     lprf_id             = "30303001"
+     mass                = "20.947826"
+     inertia_xx          = "814049.89"
+     inertia_yy          = "464982.69"
+     inertia_zz          = "355484.78"
+     inertia_xy          = "0."
+     inertia_yz          = "0."
+     inertia_xz          = "1.4407E-12"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.b_wheel_part -->
+  <Body_Rigid
+     id                  = "30401"
+     label               = "wheel_part"
+     full_label          = "Model-AutoTire-AutoTire-wheel_part"
+     cg_id               = "30401010"
+     im_id               = "30401011"
+     lprf_id             = "30401012"
+     mass                = "36."
+     inertia_xx          = "1750000."
+     inertia_yy          = "1750000."
+     inertia_zz          = "3000000."
+     v_ic_x              = "0."
+     v_ic_y              = "0."
+     v_ic_z              = "0."
+     w_ic_x              = "0."
+     w_ic_y              = "0."
+     w_ic_z              = "0."
+     v_ic_x_flag         = "TRUE"
+     v_ic_y_flag         = "TRUE"
+     v_ic_z_flag         = "TRUE"
+     w_ic_x_flag         = "TRUE"
+     w_ic_y_flag         = "TRUE"
+     w_ic_z_flag         = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.j_fixed -->
+  <Constraint_Joint
+     id                  = "304001"
+     label               = "wheel attachment"
+     full_label          = "Model-AutoTire-AutoTire-wheel attachment"
+     type                = "FIXED"
+     i_marker_id         = "30401103"
+     j_marker_id         = "30401104"
+  />
+<!-- MODEL.sys_comp_testrig.j_w_spin_rj -->
+  <Constraint_Joint
+     id                  = "303003"
+     label               = "Wheel spindle rj"
+     full_label          = "Model-AutoTire-Wheel spindle rj"
+     type                = "REVOLUTE"
+     i_marker_id         = "30301102"
+     j_marker_id         = "30303101"
+  />
+<!-- MODEL.sys_comp_testrig.j_rig_long_camber_jt -->
+  <Constraint_Joint
+     id                  = "303001"
+     label               = "Rig_Long_Camber_Jt"
+     full_label          = "Model-AutoTire-Rig_Long_Camber_Jt"
+     type                = "CYLINDRICAL"
+     i_marker_id         = "30302021"
+     j_marker_id         = "30301020"
+  />
+<!-- MODEL.sys_comp_testrig.j_rig_vert_toe_jt -->
+  <Constraint_Joint
+     id                  = "303002"
+     label               = "Rig_Vert_Toe_Jt"
+     full_label          = "Model-AutoTire-Rig_Vert_Toe_Jt"
+     type                = "CYLINDRICAL"
+     i_marker_id         = "30303040"
+     j_marker_id         = "30302040"
+  />
+<!-- MODEL.sys_comp_testrig.mot_longitudinal_motion -->
+  <Motion_Joint
+     id                  = "303001"
+     label               = "Longitudinal_motion"
+     full_label          = "Model-AutoTire-Longitudinal_motion"
+     type                = "EXPRESSION"
+     val_type            = "D"
+     expr                = "0"
+     joint_id            = "303001"
+     motion_type         = "T"
+  />
+<!-- MODEL.sys_comp_testrig.mot_camber_input -->
+  <Motion_Joint
+     id                  = "303002"
+     label               = "Camber_input"
+     full_label          = "Model-AutoTire-Camber_input"
+     type                = "EXPRESSION"
+     val_type            = "D"
+     expr                = "0"
+     joint_id            = "303001"
+     motion_type         = "R"
+  />
+<!-- MODEL.sys_comp_testrig.mot_vertical_motion -->
+  <Motion_Joint
+     id                  = "303003"
+     label               = "Vertical_motion"
+     full_label          = "Model-AutoTire-Vertical_motion"
+     type                = "EXPRESSION"
+     val_type            = "D"
+     expr                = "0"
+     joint_id            = "303002"
+     motion_type         = "T"
+  />
+<!-- MODEL.sys_comp_testrig.mot_steer_toe_input -->
+  <Motion_Joint
+     id                  = "303004"
+     label               = "Steer/Toe_input"
+     full_label          = "Model-AutoTire-Steer/Toe_input"
+     type                = "EXPRESSION"
+     val_type            = "D"
+     expr                = "0"
+     joint_id            = "303002"
+     motion_type         = "R"
+  />
+<!-- MODEL.sys_comp_testrig.mot_wheel_spin_input -->
+  <Motion_Joint
+     id                  = "303005"
+     label               = "Wheel spin input"
+     full_label          = "Model-AutoTire-Wheel spin input"
+     type                = "EXPRESSION"
+     val_type            = "D"
+     expr                = "0"
+     joint_id            = "303003"
+     motion_type         = "R"
+  />
+  <Force_Gravity
+     grav_x              = "0."
+     grav_y              = "0."
+     grav_z              = "-9810."
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gf_tire_force -->
+  <Force_Vector_TwoBody
+     id                  = "30401"
+     label               = "Tire force"
+     type                = "ForceAndTorque"
+     i_marker_id         = "30401101"
+     j_floating_marker_id= "30401105"
+     ref_marker_id       = "30301010"
+     usrsub_param_string = "USER(908,30401,30400100)
+"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "mbdtire"
+  />
+<!-- MODEL.sys_comp_testrig.frc_rig_vert_force -->
+  <Force_Scalar_TwoBody
+     id                  = "30301"
+     label               = "Rig_Vert_Force"
+     type                = "Force"
+     i_marker_id         = "30303102"
+     j_marker_id         = "30302041"
+     val_expression      = "0"
+  />
+<!-- MODEL.sys_comp_testrig.vert_ld -->
+  <Post_Request
+     id                  = "70000022"
+     comment             = "Rig_Vert_Force on Carrier(Vertical load)"
+     type                = "MARKER_FORCE"
+     i_marker_id         = "30303102"
+     j_marker_id         = "30302041"
+     ref_marker_id       = "30302041"
+  />
+<!-- MODEL.sys_comp_testrig.vert_ld -->
+  <Post_Request
+     id                  = "70000023"
+     comment             = "Rig_Vert_Force on Rig_body(Vertical load)"
+     type                = "MARKER_FORCE"
+     i_marker_id         = "30302041"
+     j_marker_id         = "30303102"
+     ref_marker_id       = "30302041"
+  />
+  <Post_Request
+     id                  = "70000017"
+     comment             = "Long. Disp. [mm]"
+     type                = "EXPRESSION"
+     expr1               = "NULL"
+     expr2               = "DZ(30302021,30301020,30301020)"
+     expr3               = "NULL"
+     expr4               = "NULL"
+     expr5               = "NULL"
+     expr6               = "NULL"
+     expr7               = "NULL"
+     expr8               = "NULL"
+  />
+  <Post_Request
+     id                  = "70000018"
+     comment             = "Camber [deg]"
+     type                = "EXPRESSION"
+     expr1               = "NULL"
+     expr2               = "AZ(30302021,30301020)*rtod"
+     expr3               = "NULL"
+     expr4               = "NULL"
+     expr5               = "NULL"
+     expr6               = "NULL"
+     expr7               = "NULL"
+     expr8               = "NULL"
+  />
+  <Post_Request
+     id                  = "70000019"
+     comment             = "Vert. Disp. [mm]"
+     type                = "EXPRESSION"
+     expr1               = "NULL"
+     expr2               = "DZ(30303040,30302040,30302040)"
+     expr3               = "NULL"
+     expr4               = "NULL"
+     expr5               = "NULL"
+     expr6               = "NULL"
+     expr7               = "NULL"
+     expr8               = "NULL"
+  />
+  <Post_Request
+     id                  = "70000020"
+     comment             = "Toe/Steer [deg]"
+     type                = "EXPRESSION"
+     expr1               = "NULL"
+     expr2               = "AZ(30303040,30302040)*rtod"
+     expr3               = "NULL"
+     expr4               = "NULL"
+     expr5               = "NULL"
+     expr6               = "NULL"
+     expr7               = "NULL"
+     expr8               = "NULL"
+  />
+  <Post_Request
+     id                  = "70000021"
+     comment             = "Wheel Omega [rad/s]"
+     type                = "EXPRESSION"
+     expr1               = "NULL"
+     expr2               = "WZ(30301102,30303101,30303101)"
+     expr3               = "NULL"
+     expr4               = "NULL"
+     expr5               = "NULL"
+     expr6               = "NULL"
+     expr7               = "NULL"
+     expr8               = "NULL"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.o_rolling_states -->
+  <Post_Request
+     id                  = "70000010"
+     comment             = "AutoTire - Radius OmegaActual OmegaFree"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(902,1,30401)"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "reqsub"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.o_kinematics -->
+  <Post_Request
+     id                  = "70000011"
+     comment             = "AutoTire - LonSlip LatSlip IncAngle (W-Axis system)"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(902,2,30401)"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "reqsub"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.o_cp_forces -->
+  <Post_Request
+     id                  = "70000012"
+     comment             = "AutoTire - Tire CP Forces (W-Axis system)"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(902,3,30401)"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "reqsub"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.o_cp_forces_sae -->
+  <Post_Request
+     id                  = "70000013"
+     comment             = "AutoTire - Tire CP Forces (SAE-Axis system)"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(902,4,30401)"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "reqsub"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.o_kinematics_sae -->
+  <Post_Request
+     id                  = "70000014"
+     comment             = "AutoTire - LonSlip LatSlip IncAngle (SAE-Axis system)"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(902,5,30401)"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "reqsub"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.o_hub_forces -->
+  <Post_Request
+     id                  = "70000015"
+     comment             = "AutoTire - Tire Hub Forces (C-Axis System)"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(902,6,30401)"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "reqsub"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.o_cp_location -->
+  <Post_Request
+     id                  = "70000016"
+     comment             = "AutoTire - Contact Patch Locations"
+     type                = "USERSUB"
+     usrsub_param_string = "USER(902,10,30401)"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "reqsub"
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_rig_bearing_inner -->
+  <Post_Graphic
+     id                  = "90000"
+     label               = "Rig_bearing_inner"
+     full_label          = "Model-AutoTire-Rig_bearing_inner"
+     color               = "52:124:43"
+     type                = "Frustum"
+     center_marker_id    = "90000000"
+     top_radius          = "50."
+     bottom_radius       = "50."
+     length              = "100."
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_hub_carrier -->
+  <Post_Graphic
+     id                  = "90001"
+     label               = "Hub/Carrier"
+     full_label          = "Model-AutoTire-Hub/Carrier"
+     color               = "200:40:23"
+     type                = "Frustum"
+     center_marker_id    = "90000001"
+     top_radius          = "25."
+     bottom_radius       = "25."
+     length              = "300."
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_rig_bearing_outer -->
+  <Post_Graphic
+     id                  = "90002"
+     label               = "Rig_bearing_outer"
+     full_label          = "Model-AutoTire-Rig_bearing_outer"
+     color               = "43:102:235"
+     type                = "Frustum"
+     center_marker_id    = "90000002"
+     top_radius          = "75."
+     bottom_radius       = "75."
+     length              = "80."
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.gbox_rig_column -->
+  <Post_Graphic
+     id                  = "90003"
+     label               = "Rig_column"
+     full_label          = "Model-AutoTire-Rig_column"
+     color               = "43:102:235"
+     type                = "BoxDefinedFromCenter"
+     center_marker_id    = "90000003"
+     length_x            = "50."
+     length_y            = "50."
+     length_z            = "850."
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.gbox_rig_beam -->
+  <Post_Graphic
+     id                  = "90004"
+     label               = "Rig_beam"
+     full_label          = "Model-AutoTire-Rig_beam"
+     color               = "43:102:235"
+     type                = "BoxDefinedFromCenter"
+     center_marker_id    = "90000004"
+     length_x            = "50."
+     length_y            = "50."
+     length_z            = "1200."
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_rig_corner_1 -->
+  <Post_Graphic
+     id                  = "90005"
+     label               = "Rig_corner_1"
+     full_label          = "Model-AutoTire-Rig_corner_1"
+     color               = "43:102:235"
+     type                = "Frustum"
+     center_marker_id    = "90000005"
+     top_radius          = "25."
+     bottom_radius       = "25."
+     length              = "50."
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_toe_bearing_outer -->
+  <Post_Graphic
+     id                  = "90006"
+     label               = "Toe_bearing_outer"
+     full_label          = "Model-AutoTire-Toe_bearing_outer"
+     color               = "43:102:235"
+     type                = "Frustum"
+     center_marker_id    = "90000006"
+     top_radius          = "40."
+     bottom_radius       = "40."
+     length              = "100."
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_toe_bearing_inner -->
+  <Post_Graphic
+     id                  = "90007"
+     label               = "Toe_bearing_inner"
+     full_label          = "Model-AutoTire-Toe_bearing_inner"
+     color               = "207:182:96"
+     type                = "Frustum"
+     center_marker_id    = "90000007"
+     top_radius          = "25."
+     bottom_radius       = "25."
+     length              = "150."
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_act_top -->
+  <Post_Graphic
+     id                  = "90008"
+     label               = "Actuator-top"
+     full_label          = "Model-AutoTire-Actuator-top"
+     color               = "207:182:96"
+     type                = "Frustum"
+     center_marker_id    = "90000008"
+     top_radius          = "25."
+     bottom_radius       = "25."
+     length              = "300."
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_act_l -->
+  <Post_Graphic
+     id                  = "90009"
+     label               = "Actuator-left"
+     full_label          = "Model-AutoTire-Actuator-left"
+     color               = "207:182:96"
+     type                = "Frustum"
+     center_marker_id    = "90000009"
+     top_radius          = "25."
+     bottom_radius       = "25."
+     length              = "387."
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.gcyl_act_r -->
+  <Post_Graphic
+     id                  = "90010"
+     label               = "Actuator-right"
+     full_label          = "Model-AutoTire-Actuator-right"
+     color               = "207:182:96"
+     type                = "Frustum"
+     center_marker_id    = "90000010"
+     top_radius          = "25."
+     bottom_radius       = "25."
+     length              = "387."
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.gsph_act_top_l -->
+  <Post_Graphic
+     id                  = "90011"
+     label               = "Actuator corver top-left"
+     full_label          = "Model-AutoTire-Actuator corver top-left"
+     color               = "207:182:96"
+     type                = "Sphere"
+     center_marker_id    = "90000011"
+     radius              = "25."
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.gsph_act_top_r -->
+  <Post_Graphic
+     id                  = "90031"
+     label               = "Actuator corver top-right"
+     full_label          = "Model-AutoTire-Actuator corver top-right"
+     color               = "207:182:96"
+     type                = "Sphere"
+     center_marker_id    = "90000012"
+     radius              = "25."
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.gsph_act_bot_l -->
+  <Post_Graphic
+     id                  = "90051"
+     label               = "Actuator corver bot-left"
+     full_label          = "Model-AutoTire-Actuator corver bot-left"
+     color               = "207:182:96"
+     type                = "Sphere"
+     center_marker_id    = "90000013"
+     radius              = "25."
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.gsph_act_bot_r -->
+  <Post_Graphic
+     id                  = "90071"
+     label               = "Actuator corver bot-right"
+     full_label          = "Model-AutoTire-Actuator corver bot-right"
+     color               = "207:182:96"
+     type                = "Sphere"
+     center_marker_id    = "90000014"
+     radius              = "25."
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_hub -->
+  <Post_Graphic
+     id                  = "90091"
+     label               = "Wheel Hub"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Hub"
+     color               = "177:177:177"
+     type                = "Frustum"
+     center_marker_id    = "90000015"
+     top_radius          = "78.375"
+     bottom_radius       = "78.375"
+     length              = "10.25"
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_spoke_1 -->
+  <Post_Graphic
+     id                  = "90092"
+     label               = "Wheel Spoke 1"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Spoke 1"
+     color               = "177:177:177"
+     type                = "Frustum"
+     center_marker_id    = "90000016"
+     top_radius          = "31.35"
+     bottom_radius       = "9.405"
+     length              = "190.5"
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_spoke_2 -->
+  <Post_Graphic
+     id                  = "90093"
+     label               = "Wheel Spoke 2"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Spoke 2"
+     color               = "177:177:177"
+     type                = "Frustum"
+     center_marker_id    = "90000017"
+     top_radius          = "31.35"
+     bottom_radius       = "9.405"
+     length              = "190.5"
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_spoke_3 -->
+  <Post_Graphic
+     id                  = "90094"
+     label               = "Wheel Spoke 3"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Spoke 3"
+     color               = "177:177:177"
+     type                = "Frustum"
+     center_marker_id    = "90000018"
+     top_radius          = "31.35"
+     bottom_radius       = "9.405"
+     length              = "190.5"
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_spoke_4 -->
+  <Post_Graphic
+     id                  = "90095"
+     label               = "Wheel Spoke 4"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Spoke 4"
+     color               = "177:177:177"
+     type                = "Frustum"
+     center_marker_id    = "90000019"
+     top_radius          = "31.35"
+     bottom_radius       = "9.405"
+     length              = "190.5"
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_spoke_5 -->
+  <Post_Graphic
+     id                  = "90096"
+     label               = "Wheel Spoke 5"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Spoke 5"
+     color               = "177:177:177"
+     type                = "Frustum"
+     center_marker_id    = "90000020"
+     top_radius          = "31.35"
+     bottom_radius       = "9.405"
+     length              = "190.5"
+     ends_type           = "CLOSED"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_tread -->
+  <Post_Graphic
+     id                  = "90097"
+     label               = "Tire tread"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Tire tread"
+     color               = "64:62:64"
+     type                = "Frustum"
+     center_marker_id    = "90000021"
+     top_radius          = "313.5"
+     bottom_radius       = "313.5"
+     length              = "143.5"
+     ends_type           = "OPEN"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_bead_inner -->
+  <Post_Graphic
+     id                  = "90098"
+     label               = "Tire bead inner"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Tire bead inner"
+     color               = "64:62:64"
+     type                = "Frustum"
+     center_marker_id    = "90000022"
+     top_radius          = "252."
+     bottom_radius       = "190.5"
+     length              = "-30.75"
+     ends_type           = "OPEN"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_bead_outer -->
+  <Post_Graphic
+     id                  = "90099"
+     label               = "Tire bead outer"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Tire bead outer"
+     color               = "64:62:64"
+     type                = "Frustum"
+     center_marker_id    = "90000023"
+     top_radius          = "252."
+     bottom_radius       = "190.5"
+     length              = "30.75"
+     ends_type           = "OPEN"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_sidewall_inner -->
+  <Post_Graphic
+     id                  = "90100"
+     label               = "Tire sidewall inner"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Tire sidewall inner"
+     color               = "64:62:64"
+     type                = "Frustum"
+     center_marker_id    = "90000024"
+     top_radius          = "252."
+     bottom_radius       = "313.5"
+     length              = "-30.75"
+     ends_type           = "OPEN"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_sidewall_outer -->
+  <Post_Graphic
+     id                  = "90101"
+     label               = "Tire sidewall outer"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Tire sidewall outer"
+     color               = "64:62:64"
+     type                = "Frustum"
+     center_marker_id    = "90000025"
+     top_radius          = "252."
+     bottom_radius       = "313.5"
+     length              = "30.75"
+     ends_type           = "OPEN"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_rim -->
+  <Post_Graphic
+     id                  = "90102"
+     label               = "Wheel Rim"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Rim"
+     color               = "177:177:177"
+     type                = "Frustum"
+     center_marker_id    = "90000026"
+     top_radius          = "190.5"
+     bottom_radius       = "190.5"
+     length              = "143.5"
+     ends_type           = "OPEN"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_inner -->
+  <Post_Graphic
+     id                  = "90103"
+     label               = "Wheel Inner"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Inner"
+     color               = "177:177:177"
+     type                = "Frustum"
+     center_marker_id    = "90000027"
+     top_radius          = "221.85"
+     bottom_radius       = "190.5"
+     length              = "-3.5875"
+     ends_type           = "OPEN"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+<!-- MODEL.sys_comp_testrig.ts_Tire.gra_tire_geometry.gr_wheel_outer -->
+  <Post_Graphic
+     id                  = "90104"
+     label               = "Wheel Outer"
+     full_label          = "Model-AutoTire-AutoTire-Tire Graphics-Wheel Outer"
+     color               = "177:177:177"
+     type                = "Frustum"
+     center_marker_id    = "90000028"
+     top_radius          = "221.85"
+     bottom_radius       = "190.5"
+     length              = "3.5875"
+     ends_type           = "OPEN"
+     refinement_level    = "3"
+     is_material_inside  = "TRUE"
+  />
+  <Control_StateEqn
+     id                  = "305001"
+     type                = "USERSUB"
+     x_solver_array_id   = "30500200"
+     y_solver_array_id   = "30500300"
+     u_solver_array_id   = "30500100"
+     ic_solver_array_id  = "0"
+     num_state           = "5"
+     num_output          = "0"
+     usrsub_param_string = "USER(908,30401,30400100)"
+     usrsub_dll_name     = "mbdtire"
+     usrsub_fnc_name     = "GSESUB"
+     usrsub_der1_name    = "GSEXX"
+     usrsub_der2_name    = "GSEXU"
+     usrsub_der3_name    = "GSEYX"
+     usrsub_der4_name    = "GSEYU"
+     is_static_hold      = "FALSE"
+  />
+ </Model>
+ <Command>
+  <ResOutput
+     mrf_file            = "TRUE"
+     abf_file            = "TRUE"
+     plt_file            = "TRUE"
+     angle_type          = "YPR"
+     flex_vel_acc_output = "FALSE"
+     contact_gra_output  = "TRUE"
+     abf_unique_time     = "LAST"
+     plt_unique_time     = "LAST"
+     azero               = "1.0000E-10"
+     dzero               = "1.0000E-10"
+     fzero               = "1.0000E-10"
+     vzero               = "1.0000E-10"
+     req_comment_only    = "FALSE"
+     capture_max_pd      = "TRUE"
+  />
+  <H3DOutput
+     switch_on           = "TRUE"
+     increment           = "1"
+     format_option       = "AUTO"
+     stress_option       = "TENSOR"
+     strain_option       = "TENSOR"
+  />
+
+
+
+
+
+
+  <!-- Simulate static -->
+  <Simulate
+    analysis_type = "Static"
+    end_time = "0"
+  />
+
+  <!-- Deactivate the Vertical Motion-->
+  <Deactivate
+    element_type = "MOTION"
+    element_id  = "303003"
+  />
+
+  <!-- Simulate static -->
+  <Simulate
+    analysis_type = "Static"
+    end_time = "0"
+  />
+  <!--Modify the long. motion -->
+  <Motion_Joint
+    id = "303001"
+    val_type = "V"
+    expr = "11111.1"
+  />
+  <!--Modify the wheel spin motion -->
+  <Motion_Joint
+    id = "303005"
+    val_type = "V"
+    expr = "35.4421"
+  />
+  <!--Solve velocity IC-->
+    <UserProgramControl
+       usrsub_param_string = "user(635, 30101010,11111.1,0,0)"
+       usrsub_dll_name     = "mbdtire"
+       usrsub_fnc_name     = "SETIC"
+  />
+  <UserProgramControl
+       usrsub_param_string = "user(635,11111.1)"
+       usrsub_dll_name     = "mbdtire"
+       usrsub_fnc_name     = "SETWIC"
+  />
+
+  <!--Modify the Vertical Force value -->
+
+  <Force_Scalar_TwoBody
+    id  = "30301"
+    val_expression = "4635.95 - 46.3595 * VZ( 30302041, 30303102,
+                                      30302041 ) "
+  />
+  <!--Modify the wheel spin motion -->
+  <Motion_Joint
+     id = "303005"
+     expr = "35.4421 + STEP( time, 1.99, 0, 2, 1 ) * SHF( time, 2, 14.1769, 0.628319, 0, 0 ) * STEP( time, 11.99, 1, 12, 0 )"
+  />
+  <Simulate
+    analysis_type = "Static"
+    end_time = "0"
+  />
+
+  <!--Simulate transient event for steady state -->
+  <Simulate
+    analysis_type = "Transient"
+    end_time = "2"
+    print_interval = "0.01"
+  />
+
+
+  <!--Simulate transient event -->
+  <Simulate
+    analysis_type = "Transient"
+    end_time = "12"
+    print_interval = "0.01"
+  />
+
+
+
+  <!--Modify the Vertical Force value -->
+
+  <Force_Scalar_TwoBody
+    id  = "30301"
+    val_expression = "3091.66 - 30.9166 * VZ( 30302041, 30303102,
+                                      30302041 ) "
+  />
+  <!--Modify the wheel spin motion -->
+  <Motion_Joint
+     id = "303005"
+     expr = "35.4421 + STEP( time, 13.99, 0, 14, 1 ) * SHF( time, 14, 14.1769, 0.628319, 0, 0 ) * STEP( time, 23.99, 1, 24, 0 )"
+  />
+
+  <!--Simulate transient event for steady state -->
+  <Simulate
+    analysis_type = "Transient"
+    end_time = "14"
+    print_interval = "0.01"
+  />
+
+
+  <!--Simulate transient event -->
+  <Simulate
+    analysis_type = "Transient"
+    end_time = "24"
+    print_interval = "0.01"
+  />
+
+
+
+  <stop/>
+
+
+ </Command>
+</MultiBodySystem>

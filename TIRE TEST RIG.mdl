@@ -1,0 +1,422 @@
+//////////////////////////////////////////////////////////////////////
+ Altair HyperWorks
+
+ Version : HWVERSION_2022.0.0.33_Mar 29 2022_22:27:26
+
+ Model : Model
+
+ Customer ID : 
+
+ Date : Wed Feb  1 19:44:26 2023
+//////////////////////////////////////////////////////////////////////
+
+*BeginMDL( the_model, "Model", "2022.0.0.33" )
+
+  *StandardInclude(FILE)
+  *SetCurrentSolverMode(MotionSolve)
+  *LoadPreferenceFile(MBD-Vehicle Dynamics Tools)
+  *System( sys_comp_testrig, "AutoTire", def_sys_Tire_TestRig, B_Ground )
+  *Analysis( ana_Tire_Longitudinal_Slip, "Longitudinal Slip Test", def_ana_Tire_Longitudinal_Slip, model.sys_comp_testrig.ts_Tire
+           , model.sys_comp_testrig.mot_longitudinal_motion, model.sys_comp_testrig.mot_vertical_motion, model.sys_comp_testrig.mot_steer_toe_input, model.sys_comp_testrig.mot_camber_input, model.sys_comp_testrig.mot_wheel_spin_input
+           , model.sys_comp_testrig.frc_rig_vert_force )
+  *SetActiveAnalysis( ana_Tire_Longitudinal_Slip )
+  *DefinitionInclude( "hwmv://autoent/definitions_mdl/sysDefTire.mdl" )
+  *DefineSystem( def_sys_Tire_TestRig, Frame_Body )
+    *Attachment( Frame_Body, "Mount body", Body, "Select attachment.", B_Ground,  )
+    *System( ts_Tire, "AutoTire", def_sys_tire, b_wheel_hub
+             , p_spindle_center, m_tire_marker, m_road_ref_marker, MODEL.Global_Frame )
+    *DataSet( ds_rig_dimensions, "Test Rig Dimensions", def_ds_rig_dimensions )
+    *Form( frm_rig_dimensions, "Test Rig Dimensions", frmdef_ds_rig_dimensions, ds_rig_dimensions )
+    *Point( p_road_origin, "Road_Origin" )
+    *Point( p_rig_pivot, "Rig_pivot" )
+    *Point( p_rig_corner_1, "Rig_corner_1" )
+    *Point( p_rig_top, "Rig_top" )
+    *Point( p_act_top, "Act_top" )
+    *Point( p_act_top_l, "Act_top-left" )
+    *Point( p_act_top_r, "Act_top-right" )
+    *Point( p_act_bot_l, "Act_bot-left" )
+    *Point( p_act_bot_r, "Act_bot-right" )
+    *Point( p_spindle_center, "Spindle_center" )
+    *Body( b_wheel_hub, "Wheel_hub", p_spindle_center, , , ,  )
+    *Body( b_rig_body, "Rig_body", p_rig_pivot, , , ,  )
+    *Body( b_carrier, "Carrier", p_spindle_center, , , ,  )
+    *Marker( m_road_ref_marker, "Road_ref_marker", Frame_Body, p_road_origin )
+    *Marker( m_tire_marker, "Tire Marker", b_wheel_hub, p_spindle_center )
+    *CylJoint( j_rig_long_camber_jt, "Rig_Long_Camber_Jt", b_rig_body, Frame_Body, p_rig_pivot, POINT, m_road_ref_marker.origin )
+    *CylJoint( j_rig_vert_toe_jt, "Rig_Vert_Toe_Jt", b_carrier, b_rig_body, p_rig_top, POINT, p_spindle_center )
+    *RevJoint( j_w_spin_rj, "Wheel spindle rj", b_wheel_hub, b_carrier, p_spindle_center, VECTOR, m_tire_marker.yaxis )
+    *ActionReactionForce( frc_rig_vert_force, "Rig_Vert_Force", LOA, b_carrier, b_rig_body, p_spindle_center, p_rig_top )
+    *Motion( mot_longitudinal_motion, "Longitudinal_motion", JOINT, j_rig_long_camber_jt, TRANS )
+    *Motion( mot_camber_input, "Camber_input", JOINT, j_rig_long_camber_jt, ROT )
+    *Motion( mot_vertical_motion, "Vertical_motion", JOINT, j_rig_vert_toe_jt, TRANS )
+    *Motion( mot_steer_toe_input, "Steer/Toe_input", JOINT, j_rig_vert_toe_jt, ROT )
+    *Motion( mot_wheel_spin_input, "Wheel spin input", JOINT, j_w_spin_rj, ROT )
+    *Output( long_disp, "Long. Disp. [mm]", EXPR, `DZ({j_rig_long_camber_jt.i.idstring}, {j_rig_long_camber_jt.j.idstring}, {j_rig_long_camber_jt.j.idstring})`, `0`, `0`, `0`, `0`, `0` )
+    *Output( camber, "Camber [deg]", EXPR, `AZ({j_rig_long_camber_jt.i.idstring}, {j_rig_long_camber_jt.j.idstring}) * rtod`, `0`, `0`, `0`, `0`, `0` )
+    *Output( vert_disp, "Vert. Disp. [mm]", EXPR, `DZ({j_rig_vert_toe_jt.i.idstring}, {j_rig_vert_toe_jt.j.idstring}, {j_rig_vert_toe_jt.j.idstring})`, `0`, `0`, `0`, `0`, `0` )
+    *Output( toe_steer, "Toe/Steer [deg]", EXPR, `AZ({j_rig_vert_toe_jt.i.idstring}, {j_rig_vert_toe_jt.j.idstring}) * rtod`, `0`, `0`, `0`, `0`, `0` )
+    *Output( whl_omega, "Wheel Omega [rad/s]", EXPR, `WZ({j_w_spin_rj.i.idstring}, {j_w_spin_rj.j.idstring}, {j_w_spin_rj.j.idstring})`, `0`, `0`, `0`, `0`, `0` )
+    *Output( vert_ld, "Vertical load", FORCE, FORCE, frc_rig_vert_force, frc_rig_vert_force.j, BOTH_MARKERS )
+    *Graphic( gcyl_rig_bearing_inner, "Rig_bearing_inner", CYLINDER, Frame_Body, p_rig_pivot, VECTOR, m_road_ref_marker.xaxis, 50, gcyl_rig_bearing_inner.r1, 100, -50, CAPBOTH, 3 )
+    *Graphic( gcyl_rig_bearing_outer, "Rig_bearing_outer", CYLINDER, b_rig_body, p_rig_pivot, VECTOR, m_road_ref_marker.xaxis, 75, gcyl_rig_bearing_outer.r1, 80, -40, CAPBOTH, 3 )
+    *Graphic( gbox_rig_column, "Rig_column", BOX, b_rig_body, FACE, p_rig_pivot, ZX, p_rig_corner_1, VECTOR, m_road_ref_marker.xaxis, 50, 50, 3 )
+    *Graphic( gbox_rig_beam, "Rig_beam", BOX, b_rig_body, CENTER, p_rig_top, ZX, VECTOR, m_road_ref_marker.xaxis, VECTOR, m_road_ref_marker.zaxis, 50, 50, ds_rig_dimensions.real_length.value * 2, 3 )
+    *Graphic( gcyl_rig_corner_1, "Rig_corner_1", CYLINDER, b_rig_body, p_rig_corner_1, VECTOR, m_road_ref_marker.yaxis, 25, gcyl_rig_corner_1.r1, 50, -25, CAPBOTH, 3 )
+    *Graphic( gcyl_toe_bearing_outer, "Toe_bearing_outer", CYLINDER, b_rig_body, p_rig_top, VECTOR, m_road_ref_marker.zaxis, 40, gcyl_toe_bearing_outer.r1, 100, -75, CAPBOTH, 3 )
+    *Graphic( gcyl_toe_bearing_inner, "Toe_bearing_inner", CYLINDER, b_carrier, p_rig_top, POINT, p_act_top, 25, gcyl_toe_bearing_inner.r1, , 0, CAPBOTH, 3 )
+    *Graphic( gcyl_act_top, "Actuator-top", CYLINDER, b_carrier, p_act_top_l, POINT, p_act_top_r, 25, gcyl_toe_bearing_inner.r1, , 0, CAPBOTH, 3 )
+    *Graphic( gcyl_act_l, "Actuator-left", CYLINDER, b_carrier, p_act_top_l, POINT, p_act_bot_l, 25, gcyl_toe_bearing_inner.r1, , 0, CAPBOTH, 3 )
+    *Graphic( gcyl_act_r, "Actuator-right", CYLINDER, b_carrier, p_act_top_r, POINT, p_act_bot_r, 25, gcyl_toe_bearing_inner.r1, , 0, CAPBOTH, 3 )
+    *Graphic( gsph_act_top_l, "Actuator corver top-left", SPHERE, b_carrier, p_act_top_l, 25, 3 )
+    *Graphic( gsph_act_top_r, "Actuator corver top-right", SPHERE, b_carrier, p_act_top_r, 25, 3 )
+    *Graphic( gsph_act_bot_l, "Actuator corver bot-left", SPHERE, b_carrier, p_act_bot_l, 25, 3 )
+    *Graphic( gsph_act_bot_r, "Actuator corver bot-right", SPHERE, b_carrier, p_act_bot_r, 25, 3 )
+    *Graphic( gcyl_hub_carrier, "Hub/Carrier", CYLINDER, b_wheel_hub, p_spindle_center, VECTOR, m_road_ref_marker.yaxis, 25, gcyl_hub_carrier.r1, ds_rig_dimensions.real_width.value, -ds_rig_dimensions.real_width.value/2, CAPBOTH, 3 )
+    *SetBoolean( DS_MotionSolve_Simopts.use_run_panel_values,       false )
+    *SetPoint( p_road_origin,              0, 0, 0 )
+    *SetBodyInertia( b_rig_body,                 10, 10000, 10000, 10000 )
+    *Set( b_rig_body.usecm, true )
+    *SetReal( ds_rig_dimensions.real_length,       600 )
+    *SetReal( ds_rig_dimensions.real_width,       300 )
+    *SetReal( ds_rig_dimensions.real_tire_radius,       313 )
+    *SetPoint( p_rig_pivot,                loc_rel_to( {ds_rig_dimensions.real_length.value, 0, 0}, m_road_ref_marker )[0], loc_rel_to( {ds_rig_dimensions.real_length.value, 0, 0}, m_road_ref_marker )[1], loc_rel_to( {ds_rig_dimensions.real_length.value, 0, 0}, m_road_ref_marker )[2] )
+    *SetPoint( p_rig_corner_1,             loc_rel_to( {ds_rig_dimensions.real_length.value, ds_rig_dimensions.real_height.value, 0}, m_road_ref_marker )[0], loc_rel_to( {ds_rig_dimensions.real_length.value, 0, ds_rig_dimensions.real_height.value}, m_road_ref_marker )[1], loc_rel_to( {ds_rig_dimensions.real_length.value, 0, ds_rig_dimensions.real_height.value}, m_road_ref_marker )[2] )
+    *SetPoint( p_rig_top,                  loc_rel_to( {0, 0, ds_rig_dimensions.real_height.value}, m_road_ref_marker )[0], loc_rel_to( {0, 0, ds_rig_dimensions.real_height.value}, m_road_ref_marker )[1], loc_rel_to( {0, 0, ds_rig_dimensions.real_height.value}, m_road_ref_marker )[2] )
+    *SetPoint( p_act_top,                  loc_rel_to( {0, 0, ds_rig_dimensions.real_height.value - 150 }, m_road_ref_marker )[0], loc_rel_to( {0, 0, ds_rig_dimensions.real_height.value - 150 }, m_road_ref_marker )[1], loc_rel_to( {0, 0, ds_rig_dimensions.real_height.value - 150 }, m_road_ref_marker )[2] )
+    *SetPoint( p_act_top_l,                loc_rel_to( {0, - ds_rig_dimensions.real_width.value/2, ds_rig_dimensions.real_height.value - 150 }, m_road_ref_marker )[0], loc_rel_to( {0, - ds_rig_dimensions.real_width.value/2, ds_rig_dimensions.real_height.value - 150 }, m_road_ref_marker )[1], loc_rel_to( {0, - ds_rig_dimensions.real_width.value/2, ds_rig_dimensions.real_height.value - 150 }, m_road_ref_marker )[2] )
+    *SetPoint( p_act_top_r,                loc_rel_to( {0, ds_rig_dimensions.real_width.value/2, ds_rig_dimensions.real_height.value - 150 }, m_road_ref_marker )[0], loc_rel_to( {0, ds_rig_dimensions.real_width.value/2, ds_rig_dimensions.real_height.value - 150 }, m_road_ref_marker )[1], loc_rel_to( {0, ds_rig_dimensions.real_width.value/2, ds_rig_dimensions.real_height.value - 150 }, m_road_ref_marker )[2] )
+    *SetPoint( p_act_bot_l,                loc_rel_to( {0, - ds_rig_dimensions.real_width.value/2, ds_rig_dimensions.real_tire_radius.value }, m_road_ref_marker )[0], loc_rel_to( {0, - ds_rig_dimensions.real_width.value/2, ds_rig_dimensions.real_tire_radius.value }, m_road_ref_marker )[1], loc_rel_to( {0, - ds_rig_dimensions.real_width.value/2, ds_rig_dimensions.real_tire_radius.value }, m_road_ref_marker )[2] )
+    *SetPoint( p_act_bot_r,                loc_rel_to( {0, ds_rig_dimensions.real_width.value/2, ds_rig_dimensions.real_tire_radius.value }, m_road_ref_marker )[0], loc_rel_to( {0, ds_rig_dimensions.real_width.value/2, ds_rig_dimensions.real_tire_radius.value }, m_road_ref_marker )[1], loc_rel_to( {0, ds_rig_dimensions.real_width.value/2, ds_rig_dimensions.real_tire_radius.value }, m_road_ref_marker )[2] )
+    *SetPoint( p_spindle_center,           loc_rel_to( {0, 0, ds_rig_dimensions.real_tire_radius.value }, m_road_ref_marker )[0], loc_rel_to( {0, 0, ds_rig_dimensions.real_tire_radius.value }, m_road_ref_marker )[1], loc_rel_to( {0, 0, ds_rig_dimensions.real_tire_radius.value }, m_road_ref_marker )[2] )
+    *SetColorMaterialReference( gcyl_rig_bearing_inner,       MODEL.mat_springgreen4 )
+    *SetColorMaterialReference( gcyl_rig_bearing_outer,       MODEL.mat_royalblue2 )
+    *SetBodyInertia( b_carrier,                  0.5, 10000, 10000, 10000 )
+    *Set( b_rig_body.inertia_props_from_graphic, true )
+    *Set( b_carrier.usecm, true )
+    *Set( b_carrier.inertia_props_from_graphic, true )
+    *SetReal( ds_rig_dimensions.real_height,       850 )
+    *SetForce( frc_rig_vert_force,         EXPR, `0` )
+    *SetMotion( mot_longitudinal_motion,       DISP, EXPR, `0` )
+    *SetMotion( mot_camber_input,           DISP, EXPR, `0` )
+    *SetMotion( mot_vertical_motion,        DISP, EXPR, `0` )
+    *SetMotion( mot_steer_toe_input,        DISP, EXPR, `0` )
+    *SetMotion( mot_wheel_spin_input,       DISP, EXPR, `0` )
+    *SetOrientation( m_tire_marker,              TWOAXES, YZ, DXDYDZ, 0.0, -1, 0, DXDYDZ, 0, 0, 1 )
+    *SetBodyInertia( b_wheel_hub,                1.0, 100.0, 100.0, 100.0 )
+    *Set( b_wheel_hub.usecm, true )
+    *Set( b_wheel_hub.inertia_props_from_graphic, true )
+  *EndDefine()
+  *DefineDataSet( def_ds_rig_dimensions )
+    *Real( real_tire_radius, "Tire radius (rolling)", EDIT )
+    *Real( real_height, "Height", EDIT )
+    *Real( real_length, "Length", EDIT )
+    *Real( real_width, "Width", EDIT )
+  *EndDefine()
+  *DefineForm( frmdef_ds_rig_dimensions, ds )
+    *SetRowsCols( 4, 2 )
+    *Attachment( ds, "Test Rig Dimensions", DataSet, "Select attachment.", ,  )
+    *ColumnLabel( 1, 2, THIS.label )
+    *ColumnWidth( 1, 30 )
+    *ColumnWidth( 2, 20 )
+    *SetCell( 1, 1, ds.real_tire_radius.label, "", LEFT, NO_EDIT )
+    *SetCell( 1, 2, ds.real_tire_radius.value, "", RIGHT, EDIT )
+    *SetCell( 2, 1, ds.real_height.label, "", LEFT, NO_EDIT )
+    *SetCell( 2, 2, ds.real_height.value, "", RIGHT, EDIT )
+    *SetCell( 3, 1, ds.real_length.label, "", LEFT, NO_EDIT )
+    *SetCell( 3, 2, ds.real_length.value, "", RIGHT, EDIT )
+    *SetCell( 4, 1, ds.real_width.label, "", LEFT, NO_EDIT )
+    *SetCell( 4, 2, ds.real_width.value, "", RIGHT, EDIT )
+  *EndDefine()
+  *DefineAnalysis( def_ana_Tire_Longitudinal_Slip, sys_AutoTire, mot_Long_motion, mot_Vert_motion
+           , mot_toe_input, mot_camber_input, mot_whl_spin, frc_vert_frc )
+    *Attachment( sys_AutoTire, "AutoTire", System, "Select attachment.", ,  )
+    *Attachment( mot_Long_motion, "Long. motion", Motion, "Select attachment.", ,  )
+    *Attachment( mot_Vert_motion, "Vert. motion", Motion, "Select attachment.", ,  )
+    *Attachment( mot_toe_input, "Toe/Steer motion", Motion, "Select attachment.", ,  )
+    *Attachment( mot_camber_input, "Camber motion", Motion, "Select attachment.", ,  )
+    *Attachment( mot_whl_spin, "Wheel spin motion", Motion, "Select attachment.", ,  )
+    *Attachment( frc_vert_frc, "Vertical force", Force, "Select attachment.", ,  )
+    *DataSet( ds_rig_inputs, "Test Rig Settings", def_rig_inputs_TLgS )
+    *Form( frm_rig_inputs, "Test Rig Settings", frmdef_rig_inputs_TLgS, ds_rig_inputs )
+    *Form( frm_vert_load, "Vertical Loads", frmdef_vert_load_TLgS, ds_rig_inputs )
+    *Report( rep_long_slip_test, "Longitudinal Slip Test Report" + "    << " + Solver_Filename.value + " >>    ", repdef_long_slip_tire_test, { getenv("ALTAIR_HOME") + "/hw/mdl/mdllib/Libs/Tasks/Tire_test_rig/tire_test_report.tpl"}, model.sys_misc.ds_report_ms.plt_file.value, model.sys_misc.ds_report_ms.result_file.value, model.Solver_Filename.base, sys_AutoTire.o_cp_forces.id, sys_AutoTire.o_kinematics.id, ds_rig_inputs.cycle_time.value, ds_rig_inputs.steady_state_time.value, ds_rig_inputs.tbl_vert_frc_table.numrecs )
+    *Template( tmplt_run_simulation, "Simulation Control", SOLVER_COMMAND, def_tmplt_run_simulation_TLgS, ds_rig_inputs
+             , mot_Long_motion, mot_Vert_motion, mot_toe_input, mot_camber_input, mot_whl_spin
+             , frc_vert_frc )
+    *SetReal( ds_rig_inputs.long_vel,       40 )
+    *SetReal( ds_rig_inputs.tire_rolling_rad,       312.00 )
+    *SetReal( ds_rig_inputs.wheel_omega,       ( ds_rig_inputs.long_vel.value * 1000 / 3600 ) / ( ds_rig_inputs.tire_rolling_rad.value / 1000) )
+    *SetReal( ds_rig_inputs.cycle_time,       10 )
+    *SetReal( ds_rig_inputs.long_slip_amp,       40 )
+    *SetReal( ds_rig_inputs.steady_state_time,       2 )
+    *SetReal( ds_rig_inputs.actuator_dmp_rate,       1 )
+    *SetReal( ds_rig_inputs.print_interval,       0.01 )
+    *Set( ds_rig_inputs.tbl_vert_frc_table.numrecs, 2 )
+    *SetInteger( ds_rig_inputs.tbl_vert_frc_table.num[0],       1 )
+    *SetReal( ds_rig_inputs.tbl_vert_frc_table.load[0],       3000 )
+    *SetInteger( ds_rig_inputs.tbl_vert_frc_table.num[1],       2 )
+    *SetReal( ds_rig_inputs.tbl_vert_frc_table.load[1],       4000 )
+  *EndDefine()
+  *DefineDataSet( def_rig_inputs_TLgS )
+    *Real( long_vel, "Longitudinal velocity", EDIT )
+    *Real( tire_rolling_rad, "Tire rolling radius", EDIT )
+    *Real( wheel_omega, "Wheel Omega", EDIT )
+    *Real( cycle_time, "Cycle time: Increase <-> Decrease", EDIT )
+    *Real( steady_state_time, "Time to reach Steady State", EDIT )
+    *Real( actuator_dmp_rate, "Damping rate on actuator", EDIT )
+    *Real( print_interval, "Print interval", EDIT )
+    *Real( long_slip_amp, "Long. slip amplitude", EDIT )
+    *Table( tbl_vert_frc_table, "Vertical Force Table", tbldef_vert_frc_table_TLgS, 2 )
+  *EndDefine()
+  *DefineRecord( tbldef_vert_frc_table_TLgS )
+    *Integer( num, "Load case number", EDIT )
+    *Real( load, "Vertical Load(N)", EDIT )
+  *EndDefine()
+  *DefineForm( frmdef_rig_inputs_TLgS, ds )
+    *SetRowsCols( 10, 3 )
+    *Attachment( ds, "Test Rig Settings", DataSet, "Select attachment.", ,  )
+    *MergeCells( 1, 1, 1, 3 )
+    *MergeCells( 9, 1, 9, 3 )
+    *ColumnLabel( 1, 3, THIS.label )
+    *ColumnWidth( 1, 30 )
+    *ColumnWidth( 2, 40 )
+    *ColumnWidth( 3, 10 )
+    *SetCell( 1, 1, "Common Test Parameters" )
+    *SetCell( 2, 1, ds.long_vel.label, "", LEFT, NO_EDIT )
+    *SetCell( 2, 2, "Longitudinal speed of the wheel [km/h]" )
+    *SetCell( 2, 3, ds.long_vel.value, "", RIGHT, EDIT )
+    *SetCell( 3, 1, ds.tire_rolling_rad.label, "", LEFT, NO_EDIT )
+    *SetCell( 3, 2, "Tire rolling radius" )
+    *SetCell( 3, 3, ds.tire_rolling_rad.value, "", RIGHT, EDIT )
+    *SetCell( 4, 1, ds.wheel_omega.label, "", LEFT, NO_EDIT )
+    *SetCell( 4, 2, "Wheel rot. speed based on long. speed and roll. radius [rad/s]" )
+    *SetCell( 4, 3, ds.wheel_omega.value, "", RIGHT, NO_EDIT )
+    *SetCell( 5, 1, ds.cycle_time.label, "", LEFT, EDIT )
+    *SetCell( 5, 2, "Load application and release cycle time" )
+    *SetCell( 5, 3, ds.cycle_time.value, "", RIGHT, EDIT )
+    *SetCell( 6, 1, ds.steady_state_time.label, "", LEFT, NO_EDIT )
+    *SetCell( 6, 2, "Settling time between load cases" )
+    *SetCell( 6, 3, ds.steady_state_time.value, "", RIGHT, EDIT )
+    *SetCell( 7, 1, ds.actuator_dmp_rate.label, "", LEFT, NO_EDIT )
+    *SetCell( 7, 2, "Damping rate for vertial force applied on the wheel [% of vertical load]" )
+    *SetCell( 7, 3, ds.actuator_dmp_rate.value, "", RIGHT, EDIT )
+    *SetCell( 8, 1, ds.print_interval.label, "", LEFT, NO_EDIT )
+    *SetCell( 8, 2, "Print interval" )
+    *SetCell( 8, 3, ds.print_interval.value, "", RIGHT, EDIT )
+    *SetCell( 9, 1, "Longitudinal Slip Test" )
+    *SetCell( 10, 1, ds.long_slip_amp.label, "", LEFT, NO_EDIT )
+    *SetCell( 10, 2, "Amplitude 'A', of variation for long. slip: -A% to +A% [<100]" )
+    *SetCell( 10, 3, ds.long_slip_amp.value, "", RIGHT, EDIT )
+  *EndDefine()
+  *DefineForm( frmdef_vert_load_TLgS, ds )
+    *SetRowsCols( 5, 2 )
+    *Attachment( ds, "DataSet", DataSet, "Select attachment.", ,  )
+    *MergeCells( 1, 1, 5, 2 )
+    *SetCell(1, 1, ds.tbl_vert_frc_table, tblfrmdef_vert_frc_table_TLgS )
+    *ColumnLabel( 1, 2, THIS.label )
+    *ColumnWidth( 1, 10 )
+    *ColumnWidth( 2, 20 )
+  *EndDefine()
+  *DefineTableForm( tblfrmdef_vert_frc_table_TLgS, tbl )
+    *SetRowsCols( 1, 2 )
+    *Attachment( tbl, "Table", TableData, "Select attachment.", ,  )
+    *ColumnWidth( 1, 10 )
+    *ColumnWidth( 2, 20 )
+    *ColumnLabel( 1, 0, "#" )
+    *ColumnLabel( 2, 0, "Vertical Load(N)" )
+    *SetCell( 1, 1, tbl.num.value, "", RIGHT, EDIT )
+    *SetCell( 1, 2, tbl.load.value, "", RIGHT, EDIT )
+  *EndDefine()
+  *DefineTemplate( def_tmplt_run_simulation_TLgS, ds_rig_inputs, mot_Long_motion, mot_Vert_motion
+           , mot_toe_input, mot_camber_input, mot_whl_spin, frc_vert_frc )
+  
+  {vel      = ds_rig_inputs.long_vel.value * 1000 * 1000  / 3600}
+  {omega    = ds_rig_inputs.wheel_omega.value}
+  {slip_var = ds_rig_inputs.long_slip_amp.value / 100 }
+  {cycle_t  = ds_rig_inputs.cycle_time.value}  
+  {p_int    = ds_rig_inputs.print_interval.value}  
+
+  {ss_t     = ds_rig_inputs.steady_state_time.value}
+  {dmp      = ds_rig_inputs.actuator_dmp_rate.value}
+  
+  {start_t  = 0.0}
+  {curr_t   = 0.0}
+  {dur      = cycle_t}
+
+  {num_vert_ld_cases    = ds_rig_inputs.tbl_vert_frc_table.numrecs}
+  {load                 = ds_rig_inputs.tbl_vert_frc_table.load.value }
+
+  {mot_z        = mot_Vert_motion.idstring }
+  {mot_long     = mot_Long_motion.idstring}
+  {mot_toe      = mot_toe_input.idstring}
+  {mot_camber   = mot_camber_input.idstring}
+  {fz_id        = frc_vert_frc.idstring }
+  {mot_w        = mot_whl_spin.idstring}
+
+  <!-- Simulate static -->
+  <Simulate
+    analysis_type = "Static"
+    end_time = "{curr_t}"
+  />
+
+  <!-- Deactivate the Vertical Motion-->
+  <Deactivate
+    element_type = "MOTION"
+    element_id  = "{mot_z}"
+  />
+  
+  <!-- Simulate static -->
+  <Simulate
+    analysis_type = "Static"
+    end_time = "{curr_t}"
+  />
+  <!--Modify the long. motion -->
+  <Motion_Joint
+    id = "{mot_long}"
+    val_type = "V"
+    expr = "{vel}"
+  />
+  <!--Modify the wheel spin motion -->
+  <Motion_Joint
+    id = "{mot_w}"
+    val_type = "V"
+    expr = "{omega}"
+  />
+  <!--Solve velocity IC-->
+    <UserProgramControl
+       usrsub_param_string = "user(635, {Global_Frame.idstring},{vel},0,0)"
+       usrsub_dll_name     = "mbdtire"
+       usrsub_fnc_name     = "SETIC"
+  />
+  <UserProgramControl
+       usrsub_param_string = "user(635,{vel})"
+       usrsub_dll_name     = "mbdtire"
+       usrsub_fnc_name     = "SETWIC"
+  />
+  {for (i = 0; i <num_vert_ld_cases; i++)}    
+
+  <!--Modify the Vertical Force value -->
+
+  <Force_Scalar_TwoBody
+    id  = "{fz_id}"
+    val_expression = "{load[i]} - {load[i] * dmp/100} * VZ( {frc_vert_frc.j.idstring}, {frc_vert_frc.i.idstring}, 
+                                      {frc_vert_frc.j.idstring} ) "
+  />
+  <!--Modify the wheel spin motion -->
+  <Motion_Joint
+     id = "{mot_w}"
+     expr = "{omega} + STEP( time, {curr_t +ss_t - 0.01}, 0, {curr_t + ss_t}, 1 ) * SHF( time, {curr_t +ss_t}, { omega * slip_var }, {2*pi/cycle_t}, 0, 0 ) * STEP( time, {curr_t+ss_t+dur - 0.01 }, 1, {curr_t+ss_t+dur}, 0 )"
+  />
+  {if (i == 0)}
+  <Simulate
+    analysis_type = "Static"
+    end_time = "{curr_t}"
+  />
+  {endif}
+ 
+  <!--Simulate transient event for steady state -->
+  <Simulate
+    analysis_type = "Transient"
+    end_time = "{curr_t + ss_t}"
+    print_interval = "{p_int}"
+  />
+  
+  {'Update curr_t
+  curr_t = curr_t + ss_t}
+  
+  <!--Simulate transient event -->
+  <Simulate
+    analysis_type = "Transient"
+    end_time = "{curr_t + dur}"
+    print_interval = "{p_int}"
+  />
+  
+  {curr_t = curr_t + dur }
+  
+  {endloop}
+  
+  <stop/>
+
+
+  *EndDefine()
+
+  *BeginContext( sys_comp_testrig )
+
+    *BeginContext( ts_Tire )
+      *SetReal( ds_tire_properties.aspect_ratio,       0.6 )
+      *SetReal( ds_tire_properties.flex_tire_rimRad,       0 )
+      *SetReal( ds_tire_properties.flex_tire_rimWidth,       0 )
+
+      *BeginContext( sys_varsub )
+        *SetSolverVariable( sv_long_slip,               EXPR, , OFF, 0.0, false, false )
+        *SetLocalUserDLLFlag( sv_long_slip,               true )
+        *SetLocalUserFunction( sv_long_slip,               "mbdtire" )
+        *SetSolverVariable( sv_long_slip,               USER, `USER(167, {arg_gforce.idstring}, 1)`, OFF, 0.0, false, false )
+        *SetLocalUserDLLFlag( sv_slip_angle,              true )
+        *SetLocalUserFunction( sv_slip_angle,              "mbdtire" )
+        *SetSolverVariable( sv_slip_angle,              USER, `USER(167, {arg_gforce.idstring}, 2 )`, OFF, 0.0, false, false )
+        *SetLocalUserDLLFlag( sv_camber_angle,            true )
+        *SetLocalUserFunction( sv_camber_angle,            "mbdtire" )
+        *SetSolverVariable( sv_camber_angle,            USER, `USER(167, {arg_gforce.idstring}, 3 )`, OFF, 0.0, false, false )
+        *SetLocalUserDLLFlag( sv_cp_force_x,              true )
+        *SetSolverVariable( sv_cp_force_x,              USER, `USER(167, {arg_gforce.idstring}, 4 )`, OFF, 0.0, false, false )
+        *SetLocalUserFunction( sv_cp_force_x,              "mbdtire" )
+        *SetLocalUserDLLFlag( sv_cp_force_y,              true )
+        *SetLocalUserFunction( sv_cp_force_y,              "mbdtire" )
+        *SetSolverVariable( sv_cp_force_y,              USER, `USER(167, {arg_gforce.idstring}, 5 )`, OFF, 0.0, false, false )
+        *SetLocalUserDLLFlag( sv_cp_force_z,              true )
+        *SetLocalUserFunction( sv_cp_force_z,              "mbdtire" )
+        *SetSolverVariable( sv_cp_force_z,              USER, `USER(167, {arg_gforce.idstring}, 6 )`, OFF, 0.0, false, false )
+        *SetLocalUserDLLFlag( sv_cp_moment_x,             true )
+        *SetLocalUserFunction( sv_cp_moment_x,             "mbdtire" )
+        *SetSolverVariable( sv_cp_moment_x,             USER, `USER(167, {arg_gforce.idstring}, 7 )`, OFF, 0.0, false, false )
+        *SetLocalUserDLLFlag( sv_cp_moment_y,             true )
+        *SetLocalUserFunction( sv_cp_moment_y,             "mbdtire" )
+        *SetSolverVariable( sv_cp_moment_y,             USER, `USER(167, {arg_gforce.idstring}, 8 )`, OFF, 0.0, false, false )
+        *SetLocalUserDLLFlag( sv_cp_moment_z,             true )
+        *SetLocalUserFunction( sv_cp_moment_z,             "mbdtire" )
+        *SetSolverVariable( sv_cp_moment_z,             USER, `USER(167, {arg_gforce.idstring}, 9 )`, OFF, 0.0, false, false )
+        *SetLocalUserDLLFlag( sv_rim_ang_vel,             true )
+        *SetLocalUserFunction( sv_rim_ang_vel,             "mbdtire" )
+        *SetSolverVariable( sv_rim_ang_vel,             USER, `USER(167, {arg_gforce.idstring}, 10 )`, OFF, 0.0, false, false )
+        *SetLocalUserDLLFlag( sv_rim_long_vel,            true )
+        *SetLocalUserFunction( sv_rim_long_vel,            "mbdtire" )
+        *SetSolverVariable( sv_rim_long_vel,            USER, `USER(167, {arg_gforce.idstring}, 11 )`, OFF, 0.0, false, false )
+        *SetLocalUserDLLFlag( sv_rim_vert_vel,            true )
+        *SetLocalUserFunction( sv_rim_vert_vel,            "mbdtire" )
+        *SetSolverVariable( sv_rim_vert_vel,            USER, `USER(167, {arg_gforce.idstring}, 12 )`, OFF, 0.0, false, false )
+        *SetLocalUserDLLFlag( sv_roll_rad,                true )
+        *SetSolverVariable( sv_roll_rad,                USER, `USER(167, {arg_gforce.idstring}, 13 )`, OFF, 0.0, false, false )
+        *SetLocalUserFunction( sv_roll_rad,                "mbdtire" )
+        *SetLocalUserDLLFlag( sv_cp_loc_x,                true )
+        *SetSolverVariable( sv_cp_loc_x,                USER, `USER(167, {arg_gforce.idstring}, 14 )`, OFF, 0.0, false, false )
+        *SetLocalUserFunction( sv_cp_loc_x,                "mbdtire" )
+        *SetLocalUserDLLFlag( sv_cp_loc_y,                true )
+        *SetSolverVariable( sv_cp_loc_y,                USER, `USER(167, {arg_gforce.idstring}, 15 )`, OFF, 0.0, false, false )
+        *SetLocalUserFunction( sv_cp_loc_y,                "mbdtire" )
+        *SetLocalUserDLLFlag( sv_cp_loc_z,                true )
+        *SetLocalUserFunction( sv_cp_loc_z,                "mbdtire" )
+        *SetSolverVariable( sv_cp_loc_z,                USER, `USER(167, {arg_gforce.idstring}, 16 )`, OFF, 0.0, false, false )
+      *EndContext()
+    *EndContext()
+  *EndContext()
+
+  *BeginContext( ana_Tire_Longitudinal_Slip )
+    *SetReal( ds_rig_inputs.tire_rolling_rad,       313.5 )
+    *SetReal( ds_rig_inputs.tbl_vert_frc_table.load[0],       4635.95 )
+    *SetReal( ds_rig_inputs.tbl_vert_frc_table.load[1],       3091.66 )
+  *EndContext()
+*EndMDL()
+
+*BeginWizardSelections()
+
+  *BeginAssemblySelections()
+    *Selection(model_type, "Test rig")
+    *Selection(test_rig_type, "Component test rig")
+    *Selection(sys_comp_testrig, "AutoTire")
+  *EndAssemblySelections()
+  *BeginTaskSelections()
+    *Selection(compTest, "Longitudinal Slip Test")
+  *EndTaskSelections()
+
+*EndWizardSelections()
